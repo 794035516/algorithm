@@ -17,27 +17,35 @@ using namespace std;
 class Tree{
 public:
  typedef struct node{
-  int data;
-  int ls,rs;
-  node* left_child;
+  int data; //存储的数据
+  int ls,rs;    //（左，右）区间
+  node* left_child;    //左节点
   node* right_child;
   node(int m_data,int m_ls,int m_rs):data(m_data),ls(m_ls),rs(m_rs),left_child(nullptr),right_child(nullptr){}
  }*pNode;
  
+ /*
+	@params   arr数组，ls,rs（左右区间）
+	*/
  pNode buildIntervalTree(int* arr,int ls,int rs){
+	 //刚好一个，构建节点
   if(ls + 1 == rs){
    pNode head = new node(arr[ls],ls,rs);
    return head;
   }
   int mid = (ls + rs)/2;
+  //分治构建左右节点
   pNode left = buildIntervalTree(arr,ls,mid);
   pNode right = buildIntervalTree(arr,mid,rs);
+  //回溯构建父亲节点
   pNode head = new node(min(left->data,right->data), ls,rs);
   head->left_child = left;
   head->right_child = right;
+  //最后返回构建根节点
   return head;
  }
  
+//前序便利树节点，中左右
  void preorderPrint(pNode head){
   if(head == nullptr){
    return;
@@ -48,6 +56,7 @@ public:
   return;
  }
 
+ //中序便利，左中右
  void inorderPrint(pNode head){
   if(head == nullptr){
    return;
@@ -58,6 +67,7 @@ public:
   return;
  }
 
+ //后序便利，左右中
  void postorderPrint(pNode head){
   if(head == nullptr){
    return;
@@ -81,6 +91,11 @@ public:
   postorderPrint(head);
   cout<<endl;
  }
+
+ /*
+	@params  根节点，左右区间
+	@returns 查询区间最小值
+ */
 
  int queryRange(pNode head,int ls,int rs){
 	if(ls <= head->ls && rs >= head->rs){
